@@ -6,3 +6,4 @@ example
 pytz
 six
 sqlparse
+emoji
