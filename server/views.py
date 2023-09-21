@@ -6,6 +6,7 @@ from django.http import HttpResponseForbidden, HttpResponse
 from django.core.files.base import ContentFile
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+import config
 
 
 # Create your views here.
@@ -78,7 +79,7 @@ def new(request):
     user = request.user
     server = Server.objects.create(
         name="Template Server",
-        icon="media/5eb3bbe236d34595b693bb74bc8934ed.png",
+        icon=config.ICON,
         owner=user,
     )
     server.admins.add(user)
