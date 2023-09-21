@@ -58,23 +58,7 @@ pip install Django
    pip install -r requirements.txt
    ```
 
-6. **Database Migration:**
-
-   Run database migrations to set up the database schema:
-
-   ```bash
-   python manage.py migrate
-   ```
-
-7. **Create a Superuser:**
-
-   To create an admin superuser account, run the following command and follow the prompts:
-
-   ```bash
-   python manage.py createsuperuser
-   ```
-
-8. **Run the Development Server:**
+6. **Run the Development Server:**
 
    Start the development server by running:
 
@@ -88,11 +72,11 @@ pip install Django
 
 1. **Access the Admin Panel:**
 
-   You can access the Django admin panel at `http://127.0.0.1:8000/admin/` and log in with the superuser credentials you created earlier. Here, you can manage users, chat rooms, and other application data.
+   You can access the Django admin panel at `http://127.0.0.1:8000/admin` and log in with the superuser credentials you created earlier. Here, you can manage users, chat rooms, and other application data.
 
 2. **Access the Chat Application:**
 
-   The chat application can be accessed at `http://127.0.0.1:8000/`. Users can register, log in, create chat rooms, and participate in real-time conversations.
+   The chat application can be accessed at `http://127.0.0.1:8000`. Users can register, log in, create chat rooms, and participate in real-time conversations.
 
 ## Customization
 
