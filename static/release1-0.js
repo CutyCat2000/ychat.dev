@@ -132,7 +132,7 @@ function setContextMenu(typeOfMenu, forID, authorID = null, userID = null) {
         }
       }
       else {
-        alert("TODO: Open "+ typeOfMenu + " context menu: "+ forID)
+        
       }
     }
     // var contextMenu = document.getElementById("context-menu");
