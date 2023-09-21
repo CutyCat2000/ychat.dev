@@ -1,8 +1,8 @@
 
-asgiref = "3.5.1"
-channels = "4.0.0"
-django = "3.2.13"
-example = "0.1.0"
-pytz = "2022.1"
-six = "1.16.0"
-sqlparse = "0.4.2"
+asgiref
+channels
+django
+example
+pytz
+six
+sqlparse
