@@ -42,7 +42,7 @@
                     style="background-image: url('{{cserver.icon.url}}');">
                 </div>
             </div>
-            {% endfor %}
+            {% endfor %}<hr>
             <div
                 class = "server-box"
                 onclick = "window.open('/server/new',target='_self')">
@@ -51,6 +51,9 @@
                     id = "dm">
                     +
                 </div>
+            </div>
+            <div class="server-box" onclick="window.open('/server/discover', target='_self')">
+              <div class ="server" id="discover">🔍︎</div>
             </div>
         </div>
         <div

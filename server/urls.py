@@ -7,4 +7,5 @@ urlpatterns = [
     path('new', views.new),
     path('join/<str:invite>', views.join),
     path('delete/<int:server_id>', views.delete_server),
+    path('discover', views.discoverView),
 ]

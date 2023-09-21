@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ NAME }}</title>
+    <link rel="stylesheet" href="{% static 'emojiPickerUpdate.css' %}">
+    <link rel="shortcut icon" href="{{ ICON }}">
+<style>
+    /* Add your custom styles here */
+    .server-listx {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .server-card {
+        border: 1px solid #333;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+    }
+
+    .server-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .server-name {
+        font-weight: bold;
+        margin-bottom: 10px;
+        font-size: 1.2em;
+    }
+
+    .server-image {
+        height: 250px;
+        width: 250px;
+        margin: 0 auto 10px;
+        display: block;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #007BFF;
+    }
+
+    .server-description {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-bottom: 10px;
+        flex-grow: 1;
+        color: #555;
+    }
+
+    .server-button {
+        text-align: center;
+    }
+
+    .server-invite {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007BFF;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+    .server-invite:hover {
+        background-color: #0056b3;
+    }
+</style>
+</head>
+<body>
+<div class="settings-nav">
+    <h2>Server Discovery</h2>
+    <a href="/" class="logout-link">Home</a>
+</div>
+<div class="settings">
+    <h2>Discover public servers</h2>
+    <div class="server-listx">
+        {% for server in servers.all %}
+            <div class="server-card">
+                <span class="server-name">{{ server.name }}</span>
+                <img src="{{ server.icon.url }}" alt="{{ server.name }}" class="server-image">
+                <div class="server-description">{{ server.description }}</div>
+                <div class="server-button">
+                    <a class="server-invite" href="/{{ server.invite }}">Join Server</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+<a style="position: fixed; top: 10px; right: 10px;" href="https://github.com/CutyCat2000/ychat.dev/"><img src="https://github.com/favicon.ico" alt="GitHub"></a>
+</body>
+</html>

@@ -23,6 +23,7 @@ class Server(models.Model):
     id = models.AutoField(primary_key=True)
     invite = models.CharField(max_length=25, default="")
     description = models.CharField(max_length=500, default="")
+    public = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name

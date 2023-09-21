@@ -118,3 +118,7 @@ def delete_server(request, server_id):
   if request.user.id == server.owner.id:
     server.delete()
   return redirect("home")
+
+def discoverView(request):
+  servers = Server.objects.filter(public=True)
+  return render(request, "discover.html",{"servers":servers})
