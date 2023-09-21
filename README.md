@@ -72,7 +72,7 @@ pip install Django
 
 1. **Access the Admin Panel:**
 
-   You can access the Django admin panel at `http://127.0.0.1:8000/admin` and log in with the superuser credentials you created earlier. Here, you can manage users, chat rooms, and other application data.
+   You can access the Django admin panel at `http://127.0.0.1:8000/admin` and log in with the first account registered. Here, you can manage users, chat rooms, and other application data.
 
 2. **Access the Chat Application:**
 
