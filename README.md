@@ -58,11 +58,15 @@ pip install Django
    pip install -r requirements.txt
    ```
 
-4. **Configurate your chat**
+6. **Configurate your chatapp**
 
    Go to [config.py](config.py) and replace the NAME with your chat's name and the WEBSITE with your websites url.
 
-6. **Run the Development Server:**
+7. **Sync your database**
+
+   Just use the command ``python manage.py migrate``
+
+9. **Run the Development Server:**
 
    Start the development server by running:
 
