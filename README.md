@@ -108,6 +108,7 @@ This project is licensed under the MPL License - see the [LICENSE](LICENSE) file
 
 ## Contact
 
-If you have any questions or need further assistance, please contact [your@email.com](mailto:your@email.com).
+If you have any questions or need further assistance, please contact [evilfiredragon53@gmail.com](evilfiredragon53@gmail.com).
 
 Enjoy using ychat.dev!
+![image](https://github.com/CutyCat2000/ychat.dev/assets/132785498/4d6731f6-ee24-493d-8c82-4734696302de)
