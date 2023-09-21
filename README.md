@@ -86,6 +86,10 @@ You can customize the project further by modifying the Django settings, adding n
 
 If you'd like to contribute to the project, feel free to submit pull requests or open issues on the GitHub repository.
 
+## New Releases
+
+To update your app without loosing data, keep the [db.sqlite3](db.sqlite3) file the same as you have, just replace all other files with the new ones. Then run ``python manage.py migrate`` to apply the changes to the database.
+
 ## License
 
 This project is licensed under the MPL License - see the [LICENSE](LICENSE) file for details.
