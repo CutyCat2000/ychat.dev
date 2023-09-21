@@ -7,7 +7,7 @@ from . import routing
 from server import views as serverviews
 # Main URL patterns
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin', admin.site.urls),
     path('', views.home, name="home"),
     path('user/', include('user.urls')),
     path('server/', include('server.urls')),
