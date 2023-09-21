@@ -7,3 +7,4 @@ pytz
 six
 sqlparse
 emoji
+pillow
