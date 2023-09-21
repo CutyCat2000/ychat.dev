@@ -108,3 +108,4 @@ If you have any questions or need further assistance, please contact [on Discord
 
 Enjoy using ychat.dev!
 ![image](https://github.com/CutyCat2000/ychat.dev/assets/132785498/4d6731f6-ee24-493d-8c82-4734696302de)
+![image](https://github.com/CutyCat2000/ychat.dev/assets/132785498/2bcce2c9-2706-465d-876e-846c6ca14834)
