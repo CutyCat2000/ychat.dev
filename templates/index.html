@@ -3,23 +3,23 @@
 <html>
     <head>
         <title>
-            YChat
+            {{NAME}}
         </title>
         <link
             rel = "stylesheet"
             href = "{% static 'emojiPickerUpdate.css' %}">
         <link
             rel = "shortcut icon"
-            href = "{% static 'icon.png' %}">
+            href = "{{ICON}}">
         <meta
             name = "og:title"
-            content = "YChat">
+            content = "{{NAME}}">
         <meta
             name = "og:description"
             content = "The free Open Source chatapp">
         <meta
             name = "og:image"
-            content = "https://ychat.dev/static/icon.png">
+            content = "{{ICON}}">
     </head>
     <body oncontextmenu = "showContextMenu(event);">
         {% if request.user.is_authenticated %}

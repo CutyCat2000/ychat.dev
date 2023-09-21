@@ -219,7 +219,7 @@ function getNewestMessage() {
       console.error(error);
     })
     .finally(() => {
-      setTimeout(getNewestMessage, 500);
+      setTimeout(getNewestMessage, 2000);
     });
 }
 

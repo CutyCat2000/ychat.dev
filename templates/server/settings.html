@@ -3,14 +3,14 @@
 <html>
     <head>
         <title>
-            YChat
+            {{NAME}}
         </title>
         <link
             rel = "stylesheet"
             href = "{% static 'emojiPickerUpdate.css' %}">
         <link
             rel = "shortcut icon"
-            href = "{% static 'icon.png' %}">
+            href = "{{ICON}}">
     </head>
     <body>
         <div
@@ -38,7 +38,7 @@
                 enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_p }}<br>
-                Invite is https://ychat.dev/[invite]
+                Invite is https://{{WEBSITE}}/[invite]
                 <button
                     type="submit">
                     Save

@@ -4,6 +4,7 @@ from .forms import LoginForm, RegisterForm, AccountSettingsForm
 from django.contrib.auth.models import User
 from server.models import Server
 from channel.models import Channel
+import config
 
 
 def user_login(request):
@@ -42,7 +43,7 @@ def user_register(request):
                     except:
                       server = Server.objects.create(
                           name="Default Server | DO NOT DELETE",
-                          icon="static/icon.png",
+                          icon=config.ICON,
                           owner=user,)
                       server.admins.add(user)
                       rules_channel = Channel.objects.create(
