@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from .forms import LoginForm, RegisterForm, AccountSettingsForm
 from django.contrib.auth.models import User
 from server.models import Server
+from channel.models import Channel
 
 
 def user_login(request):
@@ -35,7 +36,7 @@ def user_register(request):
             username = form.cleaned_data['username']
             if not User.objects.filter(username=username).exists():
                 user = User.objects.create_user(username=username)
-                for server_id in [0]:
+                for server_id in [1]:
                     try:
                       server = Server.objects.get(id=server_id)
                     except:
@@ -43,6 +44,18 @@ def user_register(request):
                           name="Default Server | DO NOT DELETE",
                           icon="static/icon.png",
                           owner=user,)
+                      server.admins.add(user)
+                      rules_channel = Channel.objects.create(
+                          name="rules",
+                          default_perm_write=False,
+                          position=1,
+                      )
+                      chat_channel = Channel.objects.create(
+                          name="chat",
+                          default_perm_write=True,
+                          position=2,
+                      )
+                      server.channels.add(chat_channel, rules_channel)
                     if user.id == 1:
                       user.is_staff = True
                       user.is_admin = True
