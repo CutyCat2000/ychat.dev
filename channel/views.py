@@ -8,11 +8,12 @@ from django.utils.html import escape
 from dm.models import DM
 import emoji
 import re
+import config
 
 
 def replace_url(match):
     url = match.group(0)
-    target = "_self" if "ychat.dev" in url else "_blank"
+    target = "_self" if config.WEBSITE in url else "_blank"
     return f'<a href="{url}" target="{target}">{url}</a>'
 
 
@@ -30,7 +31,7 @@ def home(request, server_id, channel_id):
                                   variant="emoji_type"))).replace(
                                       "\\n", "<br>").replace("\n", "<br>")
             message.content = re.sub(
-                "(https?://(?:www\.)?ychat\.dev/\S*|https?://\S+)",
+                "(https?://(?:www\.)?"+config.WEBSITE+"/\S*|https?://\S+)",
                 replace_url, message.content)
             for reaction in message.reactions.all():
                 reaction.reaction_type = emoji.emojize(reaction.reaction_type)[:1]
@@ -79,7 +80,7 @@ def latestMessage(request, server_id, channel_id):
                                   variant="emoji_type"))).replace(
                                       "\\n", "<br>").replace("\n", "<br>")
             message_content = re.sub(
-                "(https?://(?:www\.)?ychat\.dev/\S*|https?://\S+)",
+                "(https?://(?:www\.)?"+config.WEBSITE+"/\S*|https?://\S+)",
                 replace_url, message_content)
             if message:
                 data = {
@@ -118,7 +119,7 @@ def latestMessage(request, server_id, channel_id):
                                   variant="emoji_type"))).replace(
                                       "\\n", "<br>").replace("\n", "<br>")
             message_content = re.sub(
-                "(https?://(?:www\.)?ychat\.dev/\S*|https?://\S+)",
+                "(https?://(?:www\.)?"+config.WEBSITE+"/\S*|https?://\S+)",
                 replace_url, message_content)
             if message:
                 data = {
