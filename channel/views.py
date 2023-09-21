@@ -322,3 +322,4 @@ def updateReaction(request, message_id, reaction_type,server_id, channel_id):
         else:
           reaction.users.add(user)
           return HttpResponseRedirect("/channel/"+str(server_id)+"/"+str(channel_id))
+
