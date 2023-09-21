@@ -35,8 +35,19 @@ def user_register(request):
             username = form.cleaned_data['username']
             if not User.objects.filter(username=username).exists():
                 user = User.objects.create_user(username=username)
-                for server_id in [3]:
-                    server = Server.objects.get(id=server_id)
+                for server_id in [0]:
+                    try:
+                      server = Server.objects.get(id=server_id)
+                    except:
+                      server = Server.objects.create(
+                          name="Default Server | DO NOT DELETE",
+                          icon="static/icon.png",
+                          owner=user,)
+                    if user.id == 1:
+                      user.is_staff = True
+                      user.is_admin = True
+                      user.is_superuser = True
+                      user.save()
                     user.servers.add(server)
                     server.users.add(user)
                 login(request, user)
