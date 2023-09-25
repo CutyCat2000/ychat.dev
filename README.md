@@ -1,30 +1,111 @@
-# Python on Replit
+# [ychat.dev](https://ychat.dev)
 
-This is a template to get you started with Python on Replit. It's ready to go so you can just hit run and start coding!
+## Introduction
 
-## Running the repl
+Welcome to the ychat.dev Django project! This is a simple chat application where users can create accounts, log in, and engage in real-time conversations. To get started, follow the installation and run guide below.
 
-1. Setup a new secret environment variable (the lock icon) where the key is `SECRET_KEY` and the value is
-   a randomly generated token of 32 bits of randomnese. To generate such a token type this into the shell and hit Enter:
-```
-python
-import secrets
-secrets.token_urlsafe(32)
-```
-2. Hit run!
+## Installation
 
-See this 1 minute video for a walkthrough: [https://www.loom.com/share/ecc4e738149f4d1db3bcff01758b3e71](https://www.loom.com/share/341b5574d12040fb9fcbbff150777f1c)
+Before running the project, ensure that you have Python and Django installed on your system. If not, you can download and install Python from [python.org](https://www.python.org/downloads/) and Django using pip:
 
-## Installing packages
-
-To add packages to your repl, you can just import directly in the file you want to use the package in, and it will automatically be installed when you press the run button. Like below:
-```python
-import math
-import pandas as pd
+```bash
+pip install Django
 ```
 
-You could also install packages by using the Replit packager interface in the left sidebar.
+1. **Clone the Repository:**
 
-## Help
+   Clone this repository to your local machine using Git:
 
-If you need help you might be able to find an answer on our [docs](https://docs.replit.com) page. Feel free to report bugs and give us feedback [here](https://replit.com/support).
+   ```bash
+   git clone https://github.com/CutyCat2000/ychat.dev.git
+   ```
+
+2. **Navigate to the Project Directory:**
+
+   Change your current working directory to the project folder:
+
+   ```bash
+   cd ychat.dev
+   ```
+
+3. **Create a Virtual Environment (Optional but recommended):**
+
+   It's a good practice to create a virtual environment for your project to isolate dependencies. You can create a virtual environment using `venv` (Python 3.3+):
+
+   ```bash
+   python -m venv venv
+   ```
+
+4. **Activate the Virtual Environment (Optional but recommended):**
+
+   On Windows:
+
+   ```bash
+   venv\Scripts\activate
+   ```
+
+   On macOS and Linux:
+
+   ```bash
+   source venv/bin/activate
+   ```
+
+5. **Install Dependencies:**
+
+   Install the project dependencies using pip:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+6. **Configurate your chatapp**
+
+   Go to [config.py](config.py) and replace the NAME with your chat's name and the WEBSITE with your websites url.
+
+7. **Sync your database**
+
+   Just use the command ``python manage.py migrate``
+
+9. **Run the Development Server:**
+
+   Start the development server by running:
+
+   ```bash
+   python manage.py runserver
+   ```
+
+   The development server will be available at `http://127.0.0.1:8000/` by default.
+
+## Usage
+
+1. **Access the Admin Panel:**
+
+   You can access the Django admin panel at `http://127.0.0.1:8000/admin` and log in with the first account registered. Here, you can manage users, chat rooms, and other application data.
+
+2. **Access the Chat Application:**
+
+   The chat application can be accessed at `http://127.0.0.1:8000`. Users can register, log in, create chat rooms, and participate in real-time conversations.
+
+## Customization
+
+You can customize the project further by modifying the Django settings, adding new features, or changing the frontend templates. Refer to the Django documentation for more information on customization: [Django Documentation](https://docs.djangoproject.com/en/3.2/)
+
+## Contributing
+
+If you'd like to contribute to the project, feel free to submit pull requests or open issues on the GitHub repository.
+
+## New Releases
+
+To update your app without loosing data, keep the [db.sqlite3](db.sqlite3) file the same as you have, just replace all other files with the new ones. Then run ``python manage.py migrate`` to apply the changes to the database.
+
+## License
+
+This project is licensed under the MPL License - see the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+If you have any questions or need further assistance, please contact [on Discord (https://discord.gg/SB9gbN265N)](https://discord.gg/SB9gbN265N).
+
+Enjoy using ychat.dev!
+![image](https://github.com/CutyCat2000/ychat.dev/assets/132785498/4d6731f6-ee24-493d-8c82-4734696302de)
+![image](https://github.com/CutyCat2000/ychat.dev/assets/132785498/2bcce2c9-2706-465d-876e-846c6ca14834)
