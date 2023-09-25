@@ -9,6 +9,7 @@ from dm.models import DM
 import emoji
 import re
 import config
+from django.contrib.auth.models import User
 
 
 def replace_url(match):
@@ -31,10 +32,11 @@ def home(request, server_id, channel_id):
                                   variant="emoji_type"))).replace(
                                       "\\n", "<br>").replace("\n", "<br>")
             message.content = re.sub(
-                "(https?://(?:www\.)?"+config.WEBSITE+"/\S*|https?://\S+)",
+                "(https?://(?:www\.)?" + config.WEBSITE + "/\S*|https?://\S+)",
                 replace_url, message.content)
             for reaction in message.reactions.all():
-                reaction.reaction_type = emoji.emojize(reaction.reaction_type)[:1]
+                reaction.reaction_type = emoji.emojize(
+                    reaction.reaction_type)[:1]
                 reaction.save()
         if request.user in server.users.all():
             context = {
@@ -67,33 +69,46 @@ from django.utils.html import mark_safe, escape
 # ...
 
 
+def updateMessages(request, user_id):
+    user = User.objects.get(id=user_id)
+    servers = user.servers.all()
+    serverList = []
+    for server in range(len(servers)):
+        serverList.append({"server_id": servers[server].id, "channels": []})
+        channels = servers[server].channels.all()
+        for channel in channels:
+            try:
+                serverList[server]["channels"].append({
+                    "id":
+                    channel.id,
+                    "message_id":
+                    channel.messages.order_by('-timestamp').first().id
+                })
+            except:
+                pass
+    dmList = []
+    dms = DM.objects.filter(user_1=user) | DM.objects.filter(user_2=user)
+    for dm in dms.all():
+        try:
+            dmList.append({
+                "id":
+                dm.id,
+                "message_id":
+                dm.messages.order_by('-timestamp').first().id
+            })
+        except:
+            pass
+    return JsonResponse({"servers": serverList, "dms": dmList})
+
+
 def latestMessage(request, server_id, channel_id):
     if server_id != "dm":
         # For regular server channels
         try:
             channel = Channel.objects.get(id=channel_id)
             message = channel.messages.order_by('-timestamp').first()
-            message_content = mark_safe(
-                escape(
-                    emoji.emojize(message.content,
-                                  language="alias",
-                                  variant="emoji_type"))).replace(
-                                      "\\n", "<br>").replace("\n", "<br>")
-            message_content = re.sub(
-                "(https?://(?:www\.)?"+config.WEBSITE+"/\S*|https?://\S+)",
-                replace_url, message_content)
             if message:
-                data = {
-                    "message": {
-                        "id": message.id,
-                        "content": message_content,
-                        "author": {
-                            "name": message.author.username,
-                            "id": message.author.id
-                        },
-                        "timestamp": message.timestamp
-                    }
-                }
+                data = {"id": message.id}
                 return JsonResponse(data)
             else:
                 return JsonResponse({"error": "No message in this channel."})
@@ -112,27 +127,8 @@ def latestMessage(request, server_id, channel_id):
 
             # Get the latest message in the DM
             message = dm.messages.order_by('-timestamp').first()
-            message_content = mark_safe(
-                escape(
-                    emoji.emojize(message.content,
-                                  language="alias",
-                                  variant="emoji_type"))).replace(
-                                      "\\n", "<br>").replace("\n", "<br>")
-            message_content = re.sub(
-                "(https?://(?:www\.)?"+config.WEBSITE+"/\S*|https?://\S+)",
-                replace_url, message_content)
             if message:
-                data = {
-                    "message": {
-                        "id": message.id,
-                        "content": message_content,
-                        "author": {
-                            "name": message.author.username,
-                            "id": message.author.id
-                        },
-                        "timestamp": message.timestamp
-                    }
-                }
+                data = {"id": message.id}
                 return JsonResponse(data)
             else:
                 return JsonResponse({"error": "No message in this DM."})
@@ -144,6 +140,35 @@ def latestMessage(request, server_id, channel_id):
                 "error":
                 "Error occurred while fetching the latest message in DM."
             })
+
+
+def fetchMessage(request, message_id):
+    try:
+        message = Message.objects.get(id=message_id)
+        message_content = mark_safe(
+            escape(
+                emoji.emojize(message.content,
+                              language="alias",
+                              variant="emoji_type"))).replace("\\n",
+                                                              "<br>").replace(
+                                                                  "\n", "<br>")
+        message_content = re.sub(
+            "(https?://(?:www\.)?" + config.WEBSITE + "/\S*|https?://\S+)",
+            replace_url, message_content)
+        data = {
+            "message": {
+                "id": message.id,
+                "content": message_content,
+                "author": {
+                    "name": message.author.username,
+                    "id": message.author.id
+                },
+                "timestamp": message.timestamp
+            }
+        }
+        return JsonResponse(data)
+    except:
+        return JsonResponse({"error": "Message not found."})
 
 
 def sendMessage(request, server_id, channel_id):
@@ -301,25 +326,28 @@ def deleteMessage(request, server_id, channel_id, message_id):
         return JsonResponse({"error": "Error occurred while sending message."})
 
 
-def updateReaction(request, message_id, reaction_type,server_id, channel_id):
+def updateReaction(request, message_id, reaction_type, server_id, channel_id):
     message = get_object_or_404(Message, pk=message_id)
-    supported_emojis = ["💛", "👍", "👎"]
+    supported_emojis = ["💛", "👍", "👎", "👋", "❎", "✅"]
     if reaction_type not in supported_emojis:
         return JsonResponse({'error': 'Unsupported reaction type'}, status=400)
     user = request.user
-    reaction, created = Reaction.objects.get_or_create(message=message, reaction_type=reaction_type)
+    reaction, created = Reaction.objects.get_or_create(
+        message=message, reaction_type=reaction_type)
 
     if created:
         reaction.users.add(user)
         message.reactions.add(reaction)
-        return HttpResponseRedirect("/channel/"+str(server_id)+"/"+str(channel_id))
+        return HttpResponseRedirect("/channel/" + str(server_id) + "/" +
+                                    str(channel_id))
     else:
         if user in reaction.users.all():
-          reaction.users.remove(user)
-          if len(reaction.users.all()) == 0:
-            reaction.delete()
-          return HttpResponseRedirect("/channel/"+str(server_id)+"/"+str(channel_id))
+            reaction.users.remove(user)
+            if len(reaction.users.all()) == 0:
+                reaction.delete()
+            return HttpResponseRedirect("/channel/" + str(server_id) + "/" +
+                                        str(channel_id))
         else:
-          reaction.users.add(user)
-          return HttpResponseRedirect("/channel/"+str(server_id)+"/"+str(channel_id))
-
+            reaction.users.add(user)
+            return HttpResponseRedirect("/channel/" + str(server_id) + "/" +
+                                        str(channel_id))
