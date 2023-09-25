@@ -7,7 +7,7 @@
         </title>
         <link
             rel = "stylesheet"
-            href = "{% static 'emojiPickerUpdate.css' %}">
+            href = "{% static 'scrollUpdate.css' %}">
         <link
             rel = "shortcut icon"
             href = "{{ICON}}">
@@ -23,6 +23,7 @@
     </head>
     <body oncontextmenu = "showContextMenu(event);">
         {% if request.user.is_authenticated %}
+        <div class="self-id" id="{{request.user.id}}"></div>
         <div
             class = "server-list">
             <div
@@ -214,13 +215,77 @@
                 <li><a href="#">Option 3</a></li>
             </ul>
         </div>       
-        <script src = "{% static 'release1-0.js' %}"></script>
+        <script src = "{% static 'anyMessageUpdateX.js' %}"></script>
+        <div id = "instructionsModal" style="display: none; position: fixed; top: 0px; left:0px; z-index: 1; height: 100vh; width: 100vw; background-color: #333; align-items: center; justify-content: center;">
+          <div style="width: 70vw; height: 70vh;">
+            <h1>
+              Welcome to {{NAME}}
+            </h1>
+            <p>
+              <h3>
+                How-To Guide
+              </h3>
+              <ul>
+                <li>
+                  <b><u>Messages:</u></b>
+                  <ul>
+                    <li>
+                      <b>Send:</b> Press Enter / Click Send
+                    </li>
+                    <li>
+                      <b>Edit:</b> Right-Click on message
+                    </li>
+                    <li>
+                      <b>Delete:</b> Shift + Right-Click on message
+                    </li>
+                    <li>
+                      <b>Emoji Syntax:</b> :smiley: :sob: :rofl: etc.
+                    </li>
+                    <li>
+                      <b>Multiline:</b> Use \n for linebreaks
+                    </li>
+                    <li>
+                      <b>Add/Remove Reactions:</b> Click on a reaction or on (+)
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <b><u>Servers:</u></b>
+                  <ul>
+                    <li>
+                      <b>Create:</b> Press (+) in the server list
+                    </li>
+                    <li>
+                      <b>Edit/Delete:</b> Click on server name on top left
+                    </li>
+                    <li>
+                      <b>Discover:</b> Click on (🔍) in server list
+                    </li>
+                    <li>
+                      <b>Share:</b> Share your server with https://{{WEBSITE}}/&lt;invite&gt;
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <b><u>Users:</u></b>
+                  <ul>
+                    <li>
+                      <b>Send Direct Message:</b> Press (+) in the server list
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </p>
+            <button onclick = "document.getElementById('instructionsModal').style['display'] = 'none';" style = "width: 100%; height: 50px; font-size: 35px; color: #eee; background-color: #454; border-radius: 12px;">Continue to {{NAME}}</button>
+          </div>
+        </div>
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const inputElement = document.getElementById('chat-input');
-                inputElement.focus();
-            });
+            if (! localStorage.getItem("sentInstructions")) {
+              document.getElementById("instructionsModal").style["display"] = "flex";
+              localStorage.setItem("sentInstructions", "true");
+              
+            }
         </script>
-        <a style="position: fixed; top: 10px; right: 10px;" href="https://github.com/CutyCat2000/ychat.dev/"><img src="https://github.com/favicon.ico" alt="GitHub"></a>
+        <a style="position: fixed; top: 10px; right: 10px; z-index: 2;" href="https://github.com/CutyCat2000/ychat.dev/"><img src="https://github.com/favicon.ico" alt="GitHub"></a>
     </body>
 </html>
