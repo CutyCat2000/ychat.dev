@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 
+
 urlpatterns = [
       path('<int:server_id>/<int:channel_id>', views.home),
       path('<str:server_id>/<int:channel_id>/latest.json', views.latestMessage),

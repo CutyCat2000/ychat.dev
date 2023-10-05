@@ -10,6 +10,9 @@ import emoji
 import re
 import config
 from django.contrib.auth.models import User
+from django.db.models import Count
+from django.utils import timezone
+from datetime import timedelta
 
 
 def replace_url(match):
@@ -177,6 +180,20 @@ def sendMessage(request, server_id, channel_id):
         try:
             server = Server.objects.get(id=server_id)
             if request.user in server.users.all():
+                timestamp_limit = timezone.now() - timedelta(seconds=config.MESSAGE_DELAY)
+                recent_message_count = Message.objects.filter(
+                    author=request.user,
+                    timestamp__gte=timestamp_limit,
+                ).count()
+
+                if recent_message_count >= config.MESSAGE_LIMIT:
+                    return JsonResponse(
+                        {
+                            "error":
+                            f"Message limit reached. Please wait {config.MESSAGE_DELAY} seconds per "+str(config.MESSAGE_LIMIT) + " messages."
+                        },
+                        status=429)
+
                 message_content = request.GET.get("content")
                 channel = Channel.objects.get(id=channel_id)
                 if channel.default_perm_write == False and not request.user.id == server.owner.id:
@@ -186,7 +203,7 @@ def sendMessage(request, server_id, channel_id):
                     })
                 if message_content.replace(" ", "") == "":
                     return JsonResponse(
-                        {"error": "Can not send empty message"})
+                        {"error": "Can not send an empty message"})
                 message = Message.objects.create(content=message_content,
                                                  author=request.user)
                 channel.messages.add(message)
