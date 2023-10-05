@@ -26,6 +26,8 @@ class RegisterForm(forms.Form):
     username = forms.CharField(
         widget=forms.TextInput(attrs={'placeholder': 'Username - Max: 25'}),
         max_length=25)
+    password = forms.CharField(widget=forms.TextInput(
+        attrs={'placeholder': 'Password'}))
     captcha = ReCaptchaField(widget=ReCaptchaV2Invisible())
 
 
