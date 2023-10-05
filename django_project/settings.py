@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
+import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "1j234 6oi12p346hj1pmoi246umjv1o24"
+SECRET_KEY = config.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -29,12 +30,13 @@ ALLOWED_HOSTS = ['*']
 X_FRAME_OPTIONS = '*'
 
 # Application definition
-
+RECAPTCHA_PUBLIC_KEY = config.RECAPTCHA_PUBLIC_KEY
+RECAPTCHA_PRIVATE_KEY = config.RECAPTCHA_PRIVATE_KEY
 INSTALLED_APPS = [
     'django.contrib.admin', 'django.contrib.auth',
     'django.contrib.contenttypes', 'django.contrib.sessions',
     'django.contrib.messages', 'django.contrib.staticfiles', 'user', 'server',
-    'channel', 'message', 'dm'
+    'channel', 'message', 'dm', 'mfa', 'captcha'
 ]
 
 MIDDLEWARE = [
