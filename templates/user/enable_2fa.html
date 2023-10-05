@@ -14,16 +14,10 @@
     </head>
     <body>
         <div class = "center-login">
-            <div class = "login">
-                <h2>Login</h2>
-                <form method="post">
-                    {% csrf_token %}
-                    {{form.username}}
-                    {{form.password}}
-                    {{form.captcha}}
-                    <button class = "loginbtn" type="submit">Login</button>
-                    <div class="loginbtn" onclick = "window.open('{% url "user:register" %}',target='_self')">Register</div>
-                </form>
+            <div class = "login" style="text-align: center;">
+                <h2>Your 2FA key is
+                <code style="background-color: #212121;">{{2fa}}</code><br><br></h2>
+                <small>If it doesnt work for you, please go to your user settings and disable 2fa before it's too late.</small><br><a style="color: #eee;" href="{% url 'user:settings' %}">Back to settings</a>
             </div>
         </div>
         <a style="position: fixed; top: 10px; right: 10px;" href="https://github.com/CutyCat2000/ychat.dev/"><img src="https://github.com/favicon.ico" alt="GitHub"></a>

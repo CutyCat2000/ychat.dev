@@ -7,7 +7,7 @@
         </title>
         <link
             rel = "stylesheet"
-            href = "{% static 'scrollUpdate.css' %}">
+            href = "{% static '2faUpdate.css' %}">
         <link
             rel = "shortcut icon"
             href = "{{ICON}}">
@@ -19,6 +19,8 @@
                 <form method="post">
                     {% csrf_token %}
                     {{form.username}}
+                    {{form.password}}
+                    {{form.captcha}}
                     <button class = "loginbtn" type="submit">Register</button>
                     <div class="loginbtn" onclick = "window.open('{% url "user:login" %}',target='_self')">Login</div>
                 </form>

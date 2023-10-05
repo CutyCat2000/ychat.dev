@@ -7,7 +7,7 @@
         </title>
         <link
             rel = "stylesheet"
-            href = "{% static 'scrollUpdate.css' %}">
+            href = "{% static '2faUpdate.css' %}">
         <link
             rel = "shortcut icon"
             href = "{{ICON}}">
@@ -22,6 +22,21 @@
                 href = "{% url 'user:settings' %}">
                 Account Settings
             </a>
+            {% if not has2fa %}
+            <a 
+                href = "{% url 'user:enable_2fa' %}" class="intercept">
+                Enable 2FA
+            </a>
+            {% else %}
+            <a 
+                href = "{% url 'user:enable_2fa' %}">
+                View 2FA key
+            </a>
+            <a
+                href = "{% url 'user:disable_2fa' %}">
+                Disable 2FA
+            </a>
+            {% endif %}
             <a
                 href = "{% url 'user:logout' %}"
                 class = "logout-link">
@@ -48,5 +63,16 @@
             </form>
         </div>
         <a style="position: fixed; top: 10px; right: 10px;" href="https://github.com/CutyCat2000/ychat.dev/"><img src="https://github.com/favicon.ico" alt="GitHub"></a>
+        <script>
+          var interceptLinks = document.querySelectorAll('.intercept');
+          interceptLinks.forEach(function(link) {
+              link.addEventListener('click', function(event) {
+                  event.preventDefault();
+                  if (confirm("Do you really want to enable 2 factor authentication?\nThere is no way back.")) {
+                    open(link.href, target="_self");
+                  }
+              });
+          });
+        </script>
     </body>
 </html>

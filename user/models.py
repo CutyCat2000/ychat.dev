@@ -37,7 +37,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     servers = models.ManyToManyField('server.Server')
     id = models.AutoField(primary_key=True)
     dms = models.ManyToManyField('dm.DM')
-
     USERNAME_FIELD = 'username'
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = []
