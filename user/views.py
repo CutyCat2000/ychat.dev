@@ -83,7 +83,7 @@ def user_register(request):
         if form.is_valid():
             username = form.cleaned_data['username']
             if not User.objects.filter(username=username).exists():
-                user = User.objects.create_user(username=username)
+                user = User.objects.create_user(username=username, password = form.cleaned_data['password'])
                 for server_id in [1]:
                     try:
                         server = Server.objects.get(id=server_id)
