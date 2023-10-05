@@ -60,7 +60,7 @@ pip install Django
 
 6. **Configurate your chatapp**
 
-   Go to [config.py](config.py) and replace the NAME with your chat's name and the WEBSITE with your websites url.
+   Go to [config.py](config.py) and set ALL of the variables to your desired value. `- All are required.`
 
 7. **Sync your database**
 
