@@ -7,20 +7,30 @@
         </title>
         <link
             rel = "stylesheet"
-            href = "{% static '2faUpdate.css' %}">
+            href = "{% static 'channelUpdate.css' %}">
         <link
             rel = "shortcut icon"
             href = "{{ICON}}">
+        <meta
+            name = "og:title"
+            content = "{{NAME}}">
+        <meta
+            name = "og:description"
+            content = "The free Open Source chatapp">
+        <meta
+            name = "og:image"
+            content = "{{ICON}}">
     </head>
     <body>
         <div class = "center-login">
             <div class = "login">
                 <h2>Enter 6 digit 2fa key</h2>
-                <form method="post" action="{% url 'user:mfa_login' %}">
+                <form method="post" action="{% url 'user:mfa_login' %}?next={{request.GET.next}}">
                     {% csrf_token %}
                     {{form.key}}
                     {{form.username.as_hidden}}
                     {{form.password.as_hidden}}
+                    {{form.captcha}}
                     <button class = "loginbtn" type="submit">Login</button>
                     <div class="loginbtn" onclick = "window.open('{% url "user:register" %}',target='_self')">Register</div>
                 </form>

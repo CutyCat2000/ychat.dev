@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            {{NAME}}
+        </title>
+        <link rel="stylesheet" href="{% static 'channelUpdate.css' %}">
+        <link rel="shortcut icon" href="{{ server.icon.url }}">
+    </head>
+    <body>
+        <div class="settings-nav">
+            <h2>Settings</h2>
+            <a href="/server/settings/{{ server.id }}">Server Settings</a>
+            <a href="/server/channels/{{ server.id }}">Channel Settings</a>
+            <a href="/server/delete/{{ server.id }}" class="logout-link">Delete Forever</a>
+        </div>
+        <div class="settings">
+            <h2>{{ server.name }} - Channel Settings</h2>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ formset.management_form }}
+                {% for form in formset %}
+                    {{ form.as_p }}
+                {% endfor %}
+                <button type="submit">Save</button>
+            </form>
+        </div>
+        <a style="position: fixed; top: 10px; right: 10px;" href="https://github.com/CutyCat2000/ychat.dev/"><img src="https://github.com/favicon.ico" alt="GitHub"></a>
+    </body>
+</html>

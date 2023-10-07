@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 X_FRAME_OPTIONS = '*'
@@ -131,7 +131,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATIC_URL = '/static/'
 
 # Define the base URL for serving media files
-MEDIA_URL = '/media/'
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",

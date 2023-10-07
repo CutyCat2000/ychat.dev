@@ -7,7 +7,7 @@
         </title>
         <link
             rel = "stylesheet"
-            href = "{% static '2faUpdate.css' %}">
+            href = "{% static 'channelUpdate.css' %}">
         <link
             rel = "shortcut icon"
             href = "{{ICON}}">
@@ -82,6 +82,15 @@
                     </div>
                 </div>
                 {% endfor %}
+                {% if request.user.id == server.obj.owner.id %}
+                    <div
+                        class = "channel-box" style = "text-align: center;"
+                        id = "create_channel/{{server.id}}">
+                        <div class = "channel-new">
+                            +
+                        </div>
+                    </div>
+                {% endif %}
             </div>
             {% else %}
             <div
@@ -215,9 +224,9 @@
                 <li><a href="#">Option 3</a></li>
             </ul>
         </div>       
-        <script src = "{% static 'anyMessageUpdateX.js' %}"></script>
-        <div id = "instructionsModal" style="display: none; position: fixed; top: 0px; left:0px; z-index: 1; height: 100vh; width: 100vw; background-color: #333; align-items: center; justify-content: center;">
-          <div style="width: 70vw; height: 70vh;">
+        <script src = "{% static 'createChannelUpdate.js' %}"></script>
+        <div id = "instructionsModal" style="display: none; position: fixed; top: 0px; left:0px; z-index: 1; height: 100vh; width: 100vw; background-color: #333; align-items: center; justify-content: center; overflow-y: auto; overflow-x: hidden;">
+          <div style="width: 70vw; height: 95vh;">
             <h1>
               Welcome to {{NAME}}
             </h1>
@@ -267,10 +276,31 @@
                   </ul>
                 </li>
                 <li>
+                  <b><u>Channels:</u></b>
+                  <ul>
+                    <li>
+                      <b>Create:</b> Press (+) in the channel list
+                    </li>
+                    <li>
+                      <b>Edit/Delete:</b> Click on (Channel Settings) in server settings
+                    </li>
+                  </ul>
+                </li>
+                <li>
                   <b><u>Users:</u></b>
                   <ul>
                     <li>
-                      <b>Send Direct Message:</b> Press (+) in the server list
+                      <b>Send Direct Message:</b> Press the users name
+                    </li>
+                  </ul>
+                  <ul>
+                    <li>
+                      <b>Manage 2FA:</b> Go to your user settings
+                    </li>
+                  </ul>
+                  <ul>
+                    <li>
+                      <b>Open settings:</b> Press (⚙️) near your username
                     </li>
                   </ul>
                 </li>
