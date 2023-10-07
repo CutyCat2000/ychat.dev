@@ -1,6 +1,18 @@
 import uuid
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+import config
+
+
+class RegisteredIP(models.Model):
+    ip_address = models.GenericIPAddressField(unique=True)
+    amount = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return self.ip_address
+
+    def is_within_limit(self):
+        return self.amount < config.MAX_PER_IP
 
 
 class UserManager(BaseUserManager):

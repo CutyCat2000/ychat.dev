@@ -4,10 +4,12 @@ from .models import DM
 from django.contrib.auth.models import User
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
 
+@login_required
 def dm_view(request, dm_id):
     # Retrieve the DM object from the database based on dm_id
     dm = get_object_or_404(DM, pk=dm_id)
@@ -28,6 +30,7 @@ def dm_view(request, dm_id):
     })
 
 
+@login_required
 def dm_create(request, user_id):
     # Retrieve the user objects from the database
     try:

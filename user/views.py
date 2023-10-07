@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect
 from .forms import LoginForm, RegisterForm, AccountSettingsForm, MfaForm
 from django.contrib.auth.models import User
 from server.models import Server
@@ -9,6 +10,30 @@ import random
 from mfa.models import mfaKey
 import requests
 from django.contrib.auth.decorators import login_required
+from .models import RegisteredIP
+
+
+def get_client_ip(request):
+    if 'HTTP_X_FORWARDED_FOR' in request.META:
+        return request.META['HTTP_X_FORWARDED_FOR'].split(',')[0]
+    else:
+        return request.META['REMOTE_ADDR']
+
+
+def is_ip_within_limit(ip_address):
+    try:
+        registered_ip = RegisteredIP.objects.get(ip_address=ip_address)
+        return registered_ip.amount < config.MAX_PER_IP
+    except RegisteredIP.DoesNotExist:
+        return True
+
+
+def is_ip_detected(ip):
+    req = requests.get("https://v2.api.iphub.info/guest/ip/" + ip + "?c=" +
+                       str(random.randint(0, 9999999999999))).json()
+    if req["block"]:
+        return True
+    return False
 
 
 def user_login(request):
@@ -25,7 +50,12 @@ def user_login(request):
             if not mfaObject:
                 if user is not None:
                     login(request, user)
-                    return redirect('home')
+                    try:
+                        next_url = request.GET["next"]
+                        return HttpResponseRedirect(
+                            f"https://{config.WEBSITE}" + next_url)
+                    except:
+                        return redirect("home")
             else:
                 mfaForm = MfaForm(initial={
                     'username': username,
@@ -46,7 +76,6 @@ def user_2fa_login(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             key = form.cleaned_data['key']
-            print(username, password, key)
             user = authenticate(request, username=username, password=password)
             try:
                 mfaObject = mfaKey.objects.get(user__id=user.id)
@@ -55,7 +84,12 @@ def user_2fa_login(request):
             if not mfaObject:
                 if user is not None:
                     login(request, user)
-                    return redirect('home')
+                    try:
+                        next_url = request.GET["next"]
+                        return HttpResponseRedirect(
+                            f"https://{config.WEBSITE}" + next_url)
+                    except:
+                        return redirect("home")
             else:
                 real_key = requests.get("https://2fa.live/tok/" +
                                         mfaObject.key).json()["token"]
@@ -65,7 +99,13 @@ def user_2fa_login(request):
                               for i in range(0, 16, 4)])).json()["token"]
                 if key == real_key or key == real_key2:
                     login(request, user)
-                    return redirect('home')
+                    next_url = request.POST.get('next', '')
+                    try:
+                        next_url = request.GET["next"]
+                        return HttpResponseRedirect(
+                            f"https://{config.WEBSITE}" + next_url)
+                    except:
+                        return redirect("home")
 
     return redirect('user:login')
 
@@ -82,12 +122,35 @@ def user_register(request):
 
         if form.is_valid():
             username = form.cleaned_data['username']
+            client_ip = get_client_ip(request)
+
             if not User.objects.filter(username=username).exists():
-                user = User.objects.create_user(username=username, password = form.cleaned_data['password'])
+                if config.ALLOW_VPN == False:
+                    try:
+                        if is_ip_detected(client_ip):
+                            return render(request, "user/vpnfound.html")
+                    except Exception as es:
+                        print(es)
+                if is_ip_within_limit(client_ip):
+                    user = User.objects.create_user(
+                        username=username,
+                        password=form.cleaned_data['password'])
+
+                    # Increase the amount for the IP address
+                    registered_ip, created = RegisteredIP.objects.get_or_create(
+                        ip_address=client_ip)
+                    if created:
+                        registered_ip.amount = 1
+                    else:
+                        registered_ip.amount += 1
+                    registered_ip.save()
+                else:
+                    return render(request, "user/alreadyregistered.html")
                 for server_id in [1]:
                     try:
                         server = Server.objects.get(id=server_id)
                     except:
+
                         server = Server.objects.create(
                             name="Default Server | DO NOT DELETE",
                             icon=config.ICON,
@@ -112,8 +175,21 @@ def user_register(request):
                         user.save()
                     user.servers.add(server)
                     server.users.add(user)
-                login(request, user)
-                return redirect('home')
+                    login(request, user)
+                    return redirect('home')
+                else:
+                    return render(
+                        request, 'user/register.html', {
+                            'form':
+                            form,
+                            'error_message':
+                            'IP address has reached the maximum allowed registrations.'
+                        })
+            else:
+                return render(request, 'user/register.html', {
+                    'form': form,
+                    'error_message': 'Username already exists.'
+                })
     else:
         form = RegisterForm()
 

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from server.models import Server
 from .models import Channel
-from django.http import JsonResponse, HttpResponseRedirect, HttpResponseForbidden
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponseForbidden, Http404
 from message.models import Message, Reaction
 from django.utils.safestring import mark_safe
 from django.utils.html import escape
@@ -13,6 +13,7 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 from django.utils import timezone
 from datetime import timedelta
+from django.contrib.auth.decorators import login_required
 
 
 def replace_url(match):
@@ -21,6 +22,7 @@ def replace_url(match):
     return f'<a href="{url}" target="{target}">{url}</a>'
 
 
+@login_required
 # Create your views here.
 def home(request, server_id, channel_id):
     try:
@@ -104,6 +106,26 @@ def updateMessages(request, user_id):
     return JsonResponse({"servers": serverList, "dms": dmList})
 
 
+@login_required
+def createChannel(request, server_id):
+    user = request.user
+    server = None
+    for server_num in user.servers.all():
+        if server_num.id == server_id and server_num.owner.id == user.id:
+            server = server_num
+            break
+    try:
+        new_channel = Channel.objects.create(name="new-channel",
+                                             default_perm_write=True,
+                                             position=len(
+                                                 server.channels.all()))
+        server.channels.add(new_channel)
+        return redirect("/server/" + str(server_id))
+    except Exception as e:
+        print(f"Error creating channel: {str(e)}")
+        raise Http404("Error creating channel")
+
+
 def latestMessage(request, server_id, channel_id):
     if server_id != "dm":
         # For regular server channels
@@ -174,13 +196,15 @@ def fetchMessage(request, message_id):
         return JsonResponse({"error": "Message not found."})
 
 
+@login_required
 def sendMessage(request, server_id, channel_id):
     if server_id != "dm":
         server_id = int(server_id)
         try:
             server = Server.objects.get(id=server_id)
             if request.user in server.users.all():
-                timestamp_limit = timezone.now() - timedelta(seconds=config.MESSAGE_DELAY)
+                timestamp_limit = timezone.now() - timedelta(
+                    seconds=config.MESSAGE_DELAY)
                 recent_message_count = Message.objects.filter(
                     author=request.user,
                     timestamp__gte=timestamp_limit,
@@ -190,7 +214,8 @@ def sendMessage(request, server_id, channel_id):
                     return JsonResponse(
                         {
                             "error":
-                            f"Message limit reached. Please wait {config.MESSAGE_DELAY} seconds per "+str(config.MESSAGE_LIMIT) + " messages."
+                            f"Message limit reached. Please wait {config.MESSAGE_DELAY} seconds per "
+                            + str(config.MESSAGE_LIMIT) + " messages."
                         },
                         status=429)
 
@@ -240,6 +265,7 @@ def sendMessage(request, server_id, channel_id):
         return JsonResponse({"error": "Error occurred while sending message."})
 
 
+@login_required
 def editMessage(request, server_id, channel_id, message_id):
     if server_id != "dm":
         server_id = int(server_id)
@@ -297,6 +323,7 @@ def editMessage(request, server_id, channel_id, message_id):
         return JsonResponse({"error": "Error occurred while sending message."})
 
 
+@login_required
 def deleteMessage(request, server_id, channel_id, message_id):
     if server_id != "dm":
         server_id = int(server_id)
@@ -343,6 +370,7 @@ def deleteMessage(request, server_id, channel_id, message_id):
         return JsonResponse({"error": "Error occurred while sending message."})
 
 
+@login_required
 def updateReaction(request, message_id, reaction_type, server_id, channel_id):
     message = get_object_or_404(Message, pk=message_id)
     supported_emojis = ["💛", "👍", "👎", "👋", "❎", "✅"]
