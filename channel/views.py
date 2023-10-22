@@ -11,9 +11,28 @@ import re
 import config
 from django.contrib.auth.models import User
 from django.db.models import Count
+import requests
 from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth.decorators import login_required
+
+import requests
+
+
+def is_valid_url(url):
+    try:
+        if config.WEBSITE.lower() in url.lower():
+          return False
+        response = requests.head(url)
+        content_type = response.headers.get('content-type', '').lower()
+
+        # Check if the content type indicates an image
+        if content_type.startswith('image/'):
+            return True
+        else:
+            return False
+    except requests.RequestException:
+        return False
 
 
 def replace_url(match):
@@ -23,13 +42,29 @@ def replace_url(match):
 
 
 @login_required
-# Create your views here.
 def home(request, server_id, channel_id):
     try:
         server = Server.objects.get(id=server_id)
         channel = Channel.objects.get(id=channel_id)
         messages = channel.messages.order_by('-timestamp')[:100]
+
         for message in messages:
+
+            # Find all URLs in the message content
+            all_urls = re.findall(r'(https?://\S+)', message.content)
+
+            # Filter URLs to include only valid ones
+            attachments = [
+                "https://" + config.WEBSITE + "/cdn/resize/?url=" + url
+                for url in all_urls if is_valid_url(url)
+            ]
+
+            message.attachments = attachments
+
+            for reaction in message.reactions.all():
+                reaction.reaction_type = emoji.emojize(
+                    reaction.reaction_type)[:1]
+                reaction.save()
             message.content = mark_safe(
                 escape(
                     emoji.emojize(message.content,
@@ -39,10 +74,7 @@ def home(request, server_id, channel_id):
             message.content = re.sub(
                 "(https?://(?:www\.)?" + config.WEBSITE + "/\S*|https?://\S+)",
                 replace_url, message.content)
-            for reaction in message.reactions.all():
-                reaction.reaction_type = emoji.emojize(
-                    reaction.reaction_type)[:1]
-                reaction.save()
+
         if request.user in server.users.all():
             context = {
                 "server": {
@@ -58,7 +90,8 @@ def home(request, server_id, channel_id):
                     "messages": messages,
                     "obj": channel
                 },
-                "channels": server.channels.order_by("position")
+                "channels": server.channels.order_by("position"),
+                "theme": config.DEFAULT_THEME,
             }
             return render(request, 'index.html', context=context)
         else:
@@ -180,6 +213,16 @@ def fetchMessage(request, message_id):
         message_content = re.sub(
             "(https?://(?:www\.)?" + config.WEBSITE + "/\S*|https?://\S+)",
             replace_url, message_content)
+
+        # Find all URLs in the message content
+        all_urls = re.findall(r'(https?://\S+)', message_content)
+
+        # Filter URLs to include only valid ones
+        attachments = [
+            "https://" + config.WEBSITE + "/cdn/resize/?url=" + url
+            for url in all_urls if is_valid_url(url)
+        ]
+
         data = {
             "message": {
                 "id": message.id,
@@ -188,7 +231,8 @@ def fetchMessage(request, message_id):
                     "name": message.author.username,
                     "id": message.author.id
                 },
-                "timestamp": message.timestamp
+                "timestamp": message.timestamp,
+                "attachments": attachments
             }
         }
         return JsonResponse(data)
@@ -373,7 +417,7 @@ def deleteMessage(request, server_id, channel_id, message_id):
 @login_required
 def updateReaction(request, message_id, reaction_type, server_id, channel_id):
     message = get_object_or_404(Message, pk=message_id)
-    supported_emojis = ["💛", "👍", "👎", "👋", "❎", "✅"]
+    supported_emojis = config.EMOJIS.split(' ')
     if reaction_type not in supported_emojis:
         return JsonResponse({'error': 'Unsupported reaction type'}, status=400)
     user = request.user

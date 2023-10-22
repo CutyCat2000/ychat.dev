@@ -1,4 +1,4 @@
-from config import NAME, WEBSITE, ICON
+from config import NAME, WEBSITE, ICON, EMOJIS
 
 
 def config(request):
@@ -6,4 +6,5 @@ def config(request):
         'NAME': NAME,
         'ICON': ICON,
         'WEBSITE': WEBSITE,
+        'EMOJIS': EMOJIS
     }

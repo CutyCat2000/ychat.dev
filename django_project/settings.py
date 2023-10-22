@@ -35,8 +35,9 @@ RECAPTCHA_PRIVATE_KEY = config.RECAPTCHA_PRIVATE_KEY
 INSTALLED_APPS = [
     'django.contrib.admin', 'django.contrib.auth',
     'django.contrib.contenttypes', 'django.contrib.sessions',
-    'django.contrib.messages', 'django.contrib.staticfiles', 'user', 'server',
-    'channel', 'message', 'dm', 'mfa', 'captcha'
+    'django.contrib.messages', 'daphne', 'django.contrib.staticfiles', 'user',
+    'server', 'channel', 'message', 'dm', 'mfa', 'captcha', 'image_cdn',
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -46,7 +47,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'django_project.urls'
@@ -122,6 +123,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+ASGI_APPLICATION = "django_project.asgi.application"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -141,3 +144,9 @@ MEDIAFILES_DIRS = [
     BASE_DIR / "media",
     "/var/www/media/",
 ]
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
