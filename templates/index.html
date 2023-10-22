@@ -5,9 +5,10 @@
         <title>
             {{NAME}}
         </title>
+        {% include "theme-color.css" %}
         <link
             rel = "stylesheet"
-            href = "{% static 'channelUpdate.css' %}">
+            href = "{% static 'customThemes.css' %}">
         <link
             rel = "shortcut icon"
             href = "{{ICON}}">
@@ -20,10 +21,27 @@
         <meta
             name = "og:image"
             content = "{{ICON}}">
+        <style>
+          .message-attachments {
+              display: grid;
+              grid-template-columns: repeat(auto-fill, minmax(0, auto));
+          }
+      
+          .message-attachments img {
+              display: block;
+              margin: 0 auto;
+              max-width: 100%;
+              max-height: 200px;
+              gap: 50px;
+              border-radius: 7px;
+              border: 3px solid rgba(0, 0, 0, 0);
+          }
+        </style>
     </head>
     <body oncontextmenu = "showContextMenu(event);">
         {% if request.user.is_authenticated %}
         <div class="self-id" id="{{request.user.id}}"></div>
+        <div class="valid-emojis" id="{{EMOJIS}}"></div>
         <div
             class = "server-list">
             <div
@@ -112,38 +130,37 @@
             </div>
             {% endif %}
             <div
-                class = "user-me">
+                class = "user-me" style="width:115px;">
                 @{{request.user.username|upper}}
             </div>
             <div
                 class = "settings-icon">
                 ⚙
             </div>
-            <div
-                class = "chat">
-                {% if channel %}
-                    {% for message in  channel.messages %}
-                        <div
-                            class = "message"
-                            id = "{{message.id}}" onmousedown="setContextMenu('message',{{message.id}}, {{message.author.id}}, {{request.user.id}})">
-                            <div
-                                class = "message-author">
-                                <span
-                                    class = "message-author-name"
-                                    id = "{{message.author.id}}">
-                                    {{message.author.username}}
-                                </span>
-                                <span
-                                    class="timestamp">
-                                    {{message.timestamp}} UTC
-                                </span>
+            <div class="chat">
+            {% if channel %}
+                {% for message in channel.messages %}
+                    <div class="message" id="{{ message.id }}" onmousedown="setContextMenu('message',{{ message.id }}, {{ message.author.id }}, {{ request.user.id }})">
+                        <div class="message-author">
+                            <span class="message-author-name" id="{{ message.author.id }}">
+                                {{ message.author.username }}
+                            </span>
+                            <span class="timestamp">
+                                {{ message.timestamp }} UTC
+                            </span>
+                        </div>
+
+                        <div class="message-content" id="{{ message.id }}">
+                            <span>{{ message.content|safe }} {% if message.edited %}<small><small style="color: lightblue">[EDITED]</small></small>{% endif %}</span>
+
+                               <div class="message-attachments">
+                                    {% for attachment in message.attachments %}
+                                        <img src="{{ attachment }}" alt="Embeded link">
+                                    {% endfor %}
                             </div>
-        
-                            <div class = "message-content" id="{{message.id}}">
-                                {{message.content|safe}} {% if message.edited %} <small><small style="color:#123">[EDITED]</small></small>{% endif %}
                                 <div class="reactions">
                                     {% for reaction in message.reactions.all %}
-                                          <button class="reaction-button" onclick="window.open('/channel/{{server.id}}/{{channel.id}}/update_reaction/{{message.id}}/{{reaction.reaction_type}}',target='_self')">
+                                        <button class="reaction-button" onclick="updateReaction('{{reaction.reaction_type}}', '{{message.id}}')">
                                             {{ reaction.reaction_type }} ({{ reaction.users.count }})
                                         </button>
                                     {% endfor %}
@@ -171,14 +188,14 @@
                             </div>
         
                             <div class = "message-content">
-                                {{message.content|safe}} {% if message.edited %} <small><small style="color:#333;">[EDITED]</small></small>{% endif %}
+                                <span>{{message.content|safe}} {% if message.edited %} <small><small style="color:lightblue;">[EDITED]</small></small>{% endif %}</span>
                             </div>
                         </div>
                     {% endfor %}
                 {% else %}
                 <div
                     class = "message">
-                    <div class = "message-content">
+                    <div class = "message-content" style="font-size: 50px;margin-bottom:50%">
                         NO CHANNEL SELECTED
                     </div>
                 </div>
@@ -224,7 +241,7 @@
                 <li><a href="#">Option 3</a></li>
             </ul>
         </div>       
-        <script src = "{% static 'createChannelUpdate.js' %}"></script>
+        <script src = "{% static 'emojiPickerUpdate7.js' %}"></script>
         <div id = "instructionsModal" style="display: none; position: fixed; top: 0px; left:0px; z-index: 1; height: 100vh; width: 100vw; background-color: #333; align-items: center; justify-content: center; overflow-y: auto; overflow-x: hidden;">
           <div style="width: 70vw; height: 95vh;">
             <h1>
@@ -317,5 +334,7 @@
             }
         </script>
         <a style="position: fixed; top: 10px; right: 10px; z-index: 2;" href="https://github.com/CutyCat2000/ychat.dev/"><img src="https://github.com/favicon.ico" alt="GitHub"></a>
+      <script>{% include 'chatSocket.js' %}</script>
+      
     </body>
 </html>

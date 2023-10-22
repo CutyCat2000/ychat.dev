@@ -5,9 +5,10 @@
         <title>
             {{NAME}}
         </title>
+        {% include "theme-color.css" %}
         <link
             rel = "stylesheet"
-            href = "{% static 'channelUpdate.css' %}">
+            href = "{% static 'customThemes.css' %}">
         <link
             rel = "shortcut icon"
             href = "{{ICON}}">
@@ -24,7 +25,7 @@
     <body>
         <div class = "center-login">
             <div class = "login">
-                <h2>Login</h2>
+                <h2 id="login-head">Login</h2>
                 <form method="post">
                     {% csrf_token %}
                     {{form.username}}

@@ -1,0 +1,111 @@
+{% if theme == "dark" %}
+  <style>
+    :root {
+      --background: #333;
+      --text: #999;
+      --serverbg: #282828;
+      --input-hover-text: #eee;
+      --button-systemlink-hover-text: #aaa;
+      --lighter-button-systemlink-hover-text: #ccc;
+      --settings-hover: #555;
+      --settings-nav-bg: #272727;
+      --darker-bg: #222;
+      --button-bg-hover-bg-border: #444;
+      --settings-bg: #242424;
+      --settings-button-form-bg: #383838;
+      --timestamp: #888;
+      --reaction-font: #fff;
+      --reaction-active-font: #000;
+      --reaction-active-bg: #ff9800;
+      --reaction-button-hover: #666;
+    }
+  </style>
+{% elif theme == "neon" %}
+  <style>
+    :root {
+      --background: #14141f;
+      --text: #18ff32;
+      --serverbg: #1f1f2e;
+      --input-hover-text: #ff18c6;
+      --button-systemlink-hover-text: #ff7c18;
+      --lighter-button-systemlink-hover-text: #18dfff;
+      --settings-hover: #ff5e18;
+      --settings-nav-bg: #0c0c17;
+      --darker-bg: #0a0a14;
+      --button-bg-hover-bg-border: #993b18;
+      --settings-bg: #22222f;
+      --settings-button-form-bg: #1e1e2b;
+      --timestamp: #18e0ff;
+      --reaction-font: #ff8a00;
+      --reaction-active-font: #000;
+      --reaction-active-bg: #ff80aa;
+      --reaction-button-hover: #ff18ff;
+    }
+  </style>
+{% elif theme == "wonder" %}
+  <style>
+    :root {
+      --background: #111;
+      --text: #00FFB0;
+      --serverbg: #222;
+      --input-hover-text: #FF0066;
+      --button-systemlink-hover-text: #FFA500;
+      --lighter-button-systemlink-hover-text: #00BFFF;
+      --settings-hover: #FFA500;
+      --settings-nav-bg: #333;
+      --darker-bg: #000;
+      --button-bg-hover-bg-border: #FF0066;
+      --settings-bg: #444;
+      --settings-button-form-bg: #555;
+      --timestamp: #666;
+      --reaction-font: #00FFB0;
+      --reaction-active-font: #000;
+      --reaction-active-bg: #FF0066;
+      --reaction-button-hover: #00BFFF;
+    }
+  </style>
+{% elif theme == "spy" %}
+  <style>
+    :root {
+      --background: #121212;
+      --text: #FFFFFF;
+      --serverbg: #1E1E1E;
+      --input-hover-text: #FF6B00;
+      --button-systemlink-hover-text: #18A0FB;
+      --lighter-button-systemlink-hover-text: #FF6B00;
+      --settings-hover: #18A0FB;
+      --settings-nav-bg: #0E0E0E;
+      --darker-bg: #000;
+      --button-bg-hover-bg-border: #FF6B00;
+      --settings-bg: #2A2A2A;
+      --settings-button-form-bg: #333;
+      --timestamp: #777777;
+      --reaction-font: #FFFFFF;
+      --reaction-active-font: #000;
+      --reaction-active-bg: #FF6B00;
+      --reaction-button-hover: #18A0FB;
+    }
+  </style>
+{% elif theme == "discord" %}
+  <style>
+    :root {
+      --background: #36393F;
+      --text: #FFFFFF;
+      --serverbg: #2F3136;
+      --input-hover-text: #7289DA;
+      --button-systemlink-hover-text: #FFFFFF;
+      --lighter-button-systemlink-hover-text: #7289DA;
+      --settings-hover: #7289DA;
+      --settings-nav-bg: #202225;
+      --darker-bg: #2F3136;
+      --button-bg-hover-bg-border: #7289DA;
+      --settings-bg: #292B2F;
+      --settings-button-form-bg: #202225;
+      --timestamp: #72767D;
+      --reaction-font: #7289DA;
+      --reaction-active-font: #FFFFFF;
+      --reaction-active-bg: #7289DA;
+      --reaction-button-hover: #42464E;
+    }
+  </style>
+{% endif %}

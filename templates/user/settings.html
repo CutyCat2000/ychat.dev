@@ -5,9 +5,10 @@
         <title>
             {{NAME}}
         </title>
+        {% include "theme-color.css" %}
         <link
             rel = "stylesheet"
-            href = "{% static 'channelUpdate.css' %}">
+            href = "{% static 'customThemes.css' %}">
         <link
             rel = "shortcut icon"
             href = "{{ICON}}">
@@ -28,12 +29,12 @@
                 Settings
             </h2>
             <a
-                href = "{% url 'user:settings' %}">
+                href = "{% url 'user:settings' %}" >
                 Account Settings
             </a>
             {% if not has2fa %}
             <a 
-                href = "{% url 'user:enable_2fa' %}" class="intercept">
+                href = "{% url 'user:enable_2fa' %}" class="intercept" style="margin-top:10%;">
                 Enable 2FA
             </a>
             {% else %}
@@ -53,8 +54,8 @@
             </a>
         </div>
         <div
-            class = "settings">
-            <h2>
+            class = "settings" ">
+            <h2 >
               Account Settings
             </h2>
             <form
@@ -62,7 +63,7 @@
                 {% csrf_token %}
                 {{ form.as_p }}
                 <button
-                    type="submit">
+                    type="submit" style="margin-bottom:2%;">
                     Save
                 </button>
                 <a

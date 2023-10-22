@@ -22,7 +22,8 @@ def home(request, id):
                     "name": server.name,
                     "icon": server.icon,
                 },
-                "channels": server.channels.order_by("position")
+                "channels": server.channels.order_by("position"),
+                "theme": config.DEFAULT_THEME,
             }
             return render(request, 'index.html', context=context)
         else:
@@ -70,7 +71,8 @@ def settings(request, id):
                   'server/settings.html',
                   context={
                       "form": form,
-                      "server": server
+                      "server": server,
+                      "theme": config.DEFAULT_THEME,
                   })
 
 
@@ -104,6 +106,7 @@ def channel_settings(request, id):
     return render(request, 'server/channel_settings.html', {
         'formset': formset,
         'server': server,
+        "theme": config.DEFAULT_THEME,
     })
 
 
@@ -142,7 +145,8 @@ def join(request, invite):
                           "server/embed.html",
                           context={
                               "server": server,
-                              "invite": str(invite)
+                              "invite": str(invite),
+                              "theme": config.DEFAULT_THEME,
                           })
         request.user.servers.add(server)
         server.users.add(request.user)
@@ -162,4 +166,4 @@ def delete_server(request, server_id):
 
 def discoverView(request):
     servers = Server.objects.filter(public=True)
-    return render(request, "discover.html", {"servers": servers})
+    return render(request, "discover.html", {"servers": servers,"theme": config.DEFAULT_THEME,})

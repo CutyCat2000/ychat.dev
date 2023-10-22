@@ -62,11 +62,11 @@ def user_login(request):
                     'password': password
                 })
                 return render(request, 'user/2fa_login.html',
-                              {'form': mfaForm})
+                              {'form': mfaForm,"theme": config.DEFAULT_THEME})
     else:
         form = LoginForm()
 
-    return render(request, 'user/login.html', {'form': form})
+    return render(request, 'user/login.html', {'form': form, "theme": config.DEFAULT_THEME})
 
 
 def user_2fa_login(request):
@@ -128,7 +128,7 @@ def user_register(request):
                 if config.ALLOW_VPN == False:
                     try:
                         if is_ip_detected(client_ip):
-                            return render(request, "user/vpnfound.html")
+                            return render(request, "user/vpnfound.html", {"theme": config.DEFAULT_THEME})
                     except Exception as es:
                         print(es)
                 if is_ip_within_limit(client_ip):
@@ -145,7 +145,7 @@ def user_register(request):
                         registered_ip.amount += 1
                     registered_ip.save()
                 else:
-                    return render(request, "user/alreadyregistered.html")
+                    return render(request, "user/alreadyregistered.html", {"theme": config.DEFAULT_THEME, })
                 for server_id in [1]:
                     try:
                         server = Server.objects.get(id=server_id)
@@ -183,17 +183,19 @@ def user_register(request):
                             'form':
                             form,
                             'error_message':
-                            'IP address has reached the maximum allowed registrations.'
+                            'IP address has reached the maximum allowed registrations.',
+                            "theme": config.DEFAULT_THEME,
                         })
             else:
                 return render(request, 'user/register.html', {
                     'form': form,
-                    'error_message': 'Username already exists.'
+                    'error_message': 'Username already exists.',
+                    "theme": config.DEFAULT_THEME,
                 })
     else:
         form = RegisterForm()
 
-    return render(request, 'user/register.html', {'form': form})
+    return render(request, 'user/register.html', {'form': form, "theme": config.DEFAULT_THEME, })
 
 
 @login_required
@@ -227,7 +229,8 @@ def settings(request):
                   'user/settings.html',
                   context={
                       "form": form,
-                      "has2fa": has2fa
+                      "has2fa": has2fa,
+                      "theme": config.DEFAULT_THEME,
                   })
 
 
@@ -244,7 +247,8 @@ def enable_2fa(request):
                   context={
                       "2fa":
                       '-'.join(
-                          [mfaObject.key[i:i + 4] for i in range(0, 16, 4)])
+                          [mfaObject.key[i:i + 4] for i in range(0, 16, 4)]),
+                      "theme": config.DEFAULT_THEME,
                   })
 
 

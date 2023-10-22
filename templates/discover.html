@@ -3,7 +3,8 @@
 <html>
 <head>
     <title>{{ NAME }}</title>
-    <link rel="stylesheet" href="{% static 'channelUpdate.css' %}">
+    {% include "theme-color.css" %}
+    <link rel="stylesheet" href="{% static 'customThemes.css' %}">
     <link
         rel = "shortcut icon"
         href = "{{ICON}}">
