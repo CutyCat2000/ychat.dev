@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from .models import DM
 from django.contrib.auth.models import User
+import config
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -26,7 +27,8 @@ def dm_view(request, dm_id):
     return render(request, "index.html", {
         "dm": dm,
         "dms": dms,
-        "dm_messages": messages
+        "dm_messages": messages,
+        "theme": config.DEFAULT_THEME,
     })
 
 
