@@ -1,4 +1,4 @@
-# [ychat.dev](https://ychat.dev)
+# ychat.dev
 
 ## Introduction
 
